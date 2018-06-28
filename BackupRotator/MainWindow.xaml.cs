@@ -41,29 +41,38 @@ namespace BackupRotator
             _backupArrayDirectory = new List<DirectoryInfo>();
             _backupTimer = new Timer();
             _backupTimer.Elapsed += onElapsed;
+
+            if(Config.Load())
+            {
+                tbBackupInterval.Text = Config.Instance.BackupInterval.ToString();
+                tbBackupNum.Text = Config.Instance.NumberOfBackups.ToString();
+            }
         }
 
         private void btSelectFile_Click(object sender, RoutedEventArgs e)
         {
             if (_folderMode)
             {
-                Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog cfd = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog();
+                var cfd = new Microsoft.WindowsAPICodePack.Dialogs.CommonOpenFileDialog();
                 cfd.IsFolderPicker = true;
-                cfd.ShowDialog();
+                var result = cfd.ShowDialog();
+                var desiredResult = Microsoft.WindowsAPICodePack.Dialogs.CommonFileDialogResult.Ok;
 
-                if(!string.IsNullOrEmpty(cfd.FileName))
+                if(result == desiredResult && !string.IsNullOrEmpty(cfd.FileName))
                 {
                     _backupTargetDirectory = new DirectoryInfo(cfd.FileName);
+                    btStartBackups.IsEnabled = true;
                 }
             }
             else
             {
                 Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
-                ofd.ShowDialog();
+                bool result = (bool)ofd.ShowDialog();
 
-                if (!string.IsNullOrEmpty(ofd.FileName))
+                if (result && !string.IsNullOrEmpty(ofd.FileName))
                 {
                     _backupTargetFile = new FileInfo(ofd.FileName);
+                    btStartBackups.IsEnabled = true;
                 }
             }
         }
@@ -75,6 +84,8 @@ namespace BackupRotator
                 cbBackupSelection.Items.Clear();
                 _backupNum = backupNum;
                 _backupInterval = backupInterval;
+                Config.Instance.NumberOfBackups = _backupNum;
+                Config.Instance.BackupInterval = _backupInterval;
 
                 if (_folderMode)
                 {
@@ -246,6 +257,8 @@ namespace BackupRotator
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
+
+            Config.Save();
 
             if (_backupArrayDirectory.Count > 0 || _backupArrayFile.Count > 0)
             {

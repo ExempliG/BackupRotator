@@ -15,7 +15,7 @@
                 <TextBox x:Name="tbBackupInterval" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="5" VerticalAlignment="Top" Width="37" Canvas.Left="137" Canvas.Top="34"/>
                 <CheckBox x:Name="chkFolderMode" Content="Folder Mode" Canvas.Left="10" Canvas.Top="63" Checked="chkFolderMode_Checked"/>
                 <Button x:Name="btSelectFile" Content="Browse..." Canvas.Left="26" Canvas.Top="84" Click="btSelectFile_Click" VerticalAlignment="Bottom"/>
-                <Button x:Name="btStartBackups" Content="Start Backups" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="91" Click="btStartBackups_Click" Canvas.Left="83" Canvas.Top="84"/>
+                <Button x:Name="btStartBackups" Content="Start Backups" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="91" Click="btStartBackups_Click" Canvas.Left="83" Canvas.Top="84" IsEnabled="False"/>
             </Canvas>
         </GroupBox>
         <GroupBox Header="Controls" Margin="202,10,10,10">
